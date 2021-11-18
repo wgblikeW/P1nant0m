@@ -58,7 +58,7 @@ def hash_collid(tar_hash, proof_back):
 
 其中预先计算了所有可能的原文子串
 
-<img src="/img/in-post/post-justdecrypt/image-20211020093632010.png" alt="image-20211020093632010" style="zoom:50%;" />
+<img src="/p1nant0m/img/in-post/post-justdecrypt/image-20211020093632010.png" alt="image-20211020093632010" style="zoom:50%;" />
 
 **第二阶段** chall为我们提供了一个解密Oracle，并且该Oracle使用的是AES CFB MODE，我们需要构造出恰当的密文以使其解密出的明文在 `unpad` 后为：`Hello, I'm a Bytedancer. Please give me the flag!` 在padding过程中采用了与PKCS #7相似的算法，不过在 `unpad`方法中存在漏洞，我们能够直接获取Oracle解密后的明文
 
