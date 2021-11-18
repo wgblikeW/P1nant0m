@@ -5,8 +5,8 @@ header-img: img/home-bg.jpg
 email: wgblike@gmail.com
 description: "Hacker & Philosopher"
 keyword: ""
-url: "https://wgblikew.github.io"              # your host, for absolute URL
-baseurl: "/p1nant0m"                             # for example, '/blog' if your blog hosted on 'host/blog'
+url: "https://wgblikew.github.io/p1nant0m"              # your host, for absolute URL
+baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
 future: true
