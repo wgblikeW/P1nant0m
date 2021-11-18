@@ -21,7 +21,7 @@
 </footer>
 
 <!-- jQuery -->
-<script src="{{ "/js/jquery.min.js"}}"></script>
+<script src="{{ "/p1nant0m/js/jquery.min.js"}}"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <!-- Currently, only navbar scroll-down effect at desktop still depends on this -->
@@ -95,7 +95,7 @@
 {% if page.title == 'Archive' %}
 <!-- jquery.tagcloud.js -->
 <script>
-    async('{{ "/js/jquery.tagcloud.js" | prepend: site.baseurl }}', function () {
+    async('{{ "/p1nant0m/js/jquery.tagcloud.js"}}', function () {
         $.fn.tagcloud.defaults = {
             //size: {start: 1, end: 1, unit: 'em'},
             color: { start: '#bbbbee', end: '#2f93b4' },
@@ -103,7 +103,7 @@
         $('#tag_cloud a').tagcloud();
     })
 </script>
-<script src='{{ "/js/archive.js " | prepend: site.baseurl }}'></script>
+<script src='{{ "/p1nant0m/js/archive.js "}}'></script>
 {% endif %}
 
 <!--fastClick.js -->
@@ -197,7 +197,7 @@
      * Doc: https://github.com/davist11/jQuery-One-Page-Nav
      * Fork by Hux to support padding
      */
-    async("{{ '/js/jquery.nav.js' | prepend: site.baseurl }}", function () {
+    async("{{ '/p1nant0m/js/jquery.nav.js'}}", function () {
         $('.catalog-body').onePageNav({
             currentClass: "active",
             changeHash: !1,
