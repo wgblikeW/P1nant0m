@@ -1655,27 +1655,3 @@ img::-moz-selection {
   /* justify-content: center; */
   flex-direction: column;
 }
-.page-fullscreen footer {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  padding-bottom: 20px;
-  opacity: 0.6;
-  color: #fff;
-}
-.page-fullscreen footer .copyright {
-  color: #fff;
-}
-.page-fullscreen footer .copyright a {
-  color: #fff;
-}
-.page-fullscreen footer .copyright a:hover {
-  color: #ddd;
-}
-.MathJax_SVG_Display {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.no-scroll {
-  overflow-y: hidden;
-}
