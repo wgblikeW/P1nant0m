@@ -95,7 +95,7 @@
 {% if page.title == 'Archive' %}
 <!-- jquery.tagcloud.js -->
 <script>
-    async('{{ "/p1nant0m/js/jquery.tagcloud.js"}}', function () {
+    async('{{ "/js/jquery.tagcloud.js"}}', function () {
         $.fn.tagcloud.defaults = {
             //size: {start: 1, end: 1, unit: 'em'},
             color: { start: '#bbbbee', end: '#2f93b4' },
@@ -103,7 +103,7 @@
         $('#tag_cloud a').tagcloud();
     })
 </script>
-<script src='{{ "/p1nant0m/js/archive.js "}}'></script>
+<script src='{{ "/js/archive.js "}}'></script>
 {% endif %}
 
 <!--fastClick.js -->
@@ -134,25 +134,6 @@
     ga('send', 'pageview');
 </script>
 {% endif %}
-
-
-<!-- Baidu Tongji -->
-{% if site.ba_track_id %}
-<script>
-    // dynamic User by Hux
-    var _baId = '{{ site.ba_track_id }}';
-
-    // Originial
-    var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?" + _baId;
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-</script>
-{% endif %}
-
 
 <!-- Side Catalog -->
 {% unless page.no-catalog %}
@@ -197,7 +178,7 @@
      * Doc: https://github.com/davist11/jQuery-One-Page-Nav
      * Fork by Hux to support padding
      */
-    async("{{ '/p1nant0m/js/jquery.nav.js'}}", function () {
+    async("{{ '/js/jquery.nav.js'}}", function () {
         $('.catalog-body').onePageNav({
             currentClass: "active",
             changeHash: !1,
