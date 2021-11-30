@@ -4,8 +4,8 @@ SEOTitle: P1nant0m Blog
 header-img: img/home-bg.jpg 
 email: wgblike@gmail.com
 description: "Hacker & Philosopher"
-keyword: ""
-url: "https://wgblikew.github.io/p1nant0m"              # your host, for absolute URL
+keyword: "p1nant0m, Crypto, Cryptography, CTF, 密码学, p1nant0m Blog, 密码学原理, 信息安全"
+url: "https://p1nant0m.com"              # your host, for absolute URL
 baseurl: "/p1nant0m"                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
