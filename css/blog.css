@@ -614,7 +614,7 @@ pre.highlight {
   font-size: 20px;
 }
 .search-page #search-input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   border: none;
   outline: none;
   padding: 0;
@@ -652,7 +652,7 @@ pre.highlight {
   font-size: 16px;
 }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   font-size: 16px;
   color: #404040;
@@ -662,7 +662,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 p {
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 30px 0;
 }
 @media screen and (max-width: 768px) {
@@ -676,7 +676,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   line-height: 1.1;
   font-weight: bold;
@@ -976,7 +976,7 @@ samp {
      *     TypeIsBeautiful,
      *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
      */
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
 }
 .navbar-custom .navbar-brand {
@@ -1172,7 +1172,7 @@ samp {
      *     TypeIsBeautiful,
      *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
      */
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   font-size: 18px;
   line-height: 1.1;
@@ -1200,7 +1200,7 @@ samp {
      *     TypeIsBeautiful,
      *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
      */
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   font-size: 17px;
   line-height: 1.4;
@@ -1209,7 +1209,7 @@ samp {
   margin-top: -5px;
 }
 .intro-header .post-heading .meta {
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-style: italic;
   font-weight: 300;
   font-size: 16px;
@@ -1269,7 +1269,7 @@ samp {
   margin-bottom: 10px;
 }
 .post-preview > .post-meta {
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: #a3a3a3;
   font-size: 16px;
   font-style: italic;
@@ -1346,7 +1346,7 @@ footer .copyright a:focus {
   color: #0085a1;
 }
 .btn {
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
   font-size: 14px;
@@ -1375,7 +1375,7 @@ footer .copyright a:focus {
      *     TypeIsBeautiful,
      *     [This Post](http://zhuanlan.zhihu.com/ibuick/20186806) etc.
      */
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
   text-transform: uppercase;
   font-size: 13px;
@@ -1558,7 +1558,7 @@ img::-moz-selection {
 }
 .mini-post-list .tag-text {
   font-weight: 200;
-  font-family: -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: "Roboto Serif", -apple-system, BlinkMacSystemFont, 'Noto Serif SC', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.7;
 }
 .mini-post-list .post-preview {
