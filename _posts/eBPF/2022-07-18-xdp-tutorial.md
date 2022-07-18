@@ -139,4 +139,4 @@ XDP 是 Linux 内核上游（Linux 内核原始版本非 Linux 分发版）的�
 1. [Github repo](https://github.com/xdp-project/xdp-tutorial) for Learning XDP Programming 
 2. [Cilium BPF reference guide](https://cilium.readthedocs.io/en/latest/bpf/) for building industrial application
 3. General Introduction to XDP in [the academic paper](https://github.com/xdp-project/xdp-paper/blob/master/xdp-the-express-data-path.pdf) or [the presentation](https://github.com/xdp-project/xdp-paper/blob/master/xdp-presentation.pdf).  
-
+4. [Linux 内核观测技术 BPF](https://item.jd.com/12939760.html)
