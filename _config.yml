@@ -62,8 +62,8 @@ kramdown:
 # Disqus settings
 # disqus_username: 
 
-# Netease settings
-# netease_comment: false
+# gitTalk settings
+git_talk_comment: true
 
 
 
