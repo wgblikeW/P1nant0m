@@ -155,6 +155,8 @@ XDP 是 Linux 内核上游（Linux 内核原始版本非 Linux 分发版）的�
 
 #### XDP 程序的编写
 
+##### Basic 03 - counting with BPF maps
+
 我们可以通过定义一个全局结构体 `bpf_map_def` 并带上 `SEC("maps")` 宏来创建一个 BPF map，
 
 ```c
@@ -164,21 +166,79 @@ struct {
 	__type(value, struct datarec);
 	__uint(max_entries, XDP_ACTION_MAX);
 } xdp_stats_map SEC(".maps");
+
+struct {
+    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+    __type(key, __u32);
+    __type(value, struct datarec);
+    __uint(max_entries, MAX_ENTRIES);
+} xdp_stats_map_percpu SEC(".maps");
 ```
 
 BPF maps 是通用的键值对存储方式，在上述定义中 `__uint(type, BPF_MAP_TYPE_ARRAY)` 用于指定特定类型的 BPF maps（这里给出了 v5.4 内核版本中所有的 [BPF maps 类型](https://elixir.bootlin.com/linux/v5.4/source/include/uapi/linux/bpf.h#L115)），`__type(key, __u32)` 用于指定 Key 对应的数据类型，`__type(value, struct datarec)` 用于指定 Value 对应的数据类型，`__uint(max_entries, XDP_ACTION _MAX)` 用于指定可存放的最大元素个数。
 
-> 所有处于内核态的 BPF 程序以及用户空间中的应用程序都能够访问 BPF maps。
-
 使用 `bpf_object_find_map_by_name()` 函数可以通过 BPF maps 的名字找到其对应的 `bpf_map` 对象，通过 `bpf_map_fd()` 函数可以获得 map 的文件描述符，libbpf 库中提供了一个函数 `bpf_object__find_map_fd_by_ name()` 用于直接完成上述两个步骤。
 
-在用户空间中，我们可以通过函数 `bpf_map_lookup_elem()` 在用户空间中读取 BPF maps 中的内容。
+> 所有处于内核态的 BPF 程序以及用户空间中的应用程序都能够访问 BPF Maps。
+
+在用户空间中，我们可以通过函数 `bpf_map_lookup_elem()` 在用户空间中读取 BPF Maps 中的内容。
 
 
 
-> bpf-helpers 函数可以通过 `man bpf-helpers` 命令查看其函数相关入参、使用方法描述以及函数的返回值。
+在上述代码中，我们分别定义了两种不同类型的 BPF Maps，它们分别是 `BPF_MAP_TYPE_ARRAY` 与 `BPF_MAP_TYPE_PERCPU_ ARRAY` ，它们两者之间最大的区别【对持有数据的对象进行操作是否需要加锁】，对于前者来说多个数据操作主体共享一片内存空间，所以在这片内存空间之上进行操作需要持有锁（操作需要是原子的），而对于后者来说，由于各数据操作主体独有一片自用的内存空间，便不存在了临界区，我们可以直接在这片区域上进行读写。**不过，这时候我们在用户空间代码中的操作可能会有些许不同，这是由于数据被各 CPU 所持有，要想获取完整的数据需要遍历所有 CPU 持有的 Map 对象**。
 
 
+
+> 在编写 BPF 程序时，遇到不熟悉的函数或者用法，可以查看 bpf-helpers。通过 `man bpf-helpers` 命令可以查看各函数相关入参、使用方法描述以及函数的返回值。
+
+
+
+我在本课程中使用 Go 语言编写对应的用户态代码，主要使用到了 `github.com/aquasecurity/libbpfgo` [这个库](https://github.com/aquasecurity/libbpfgo)，其中遇到了一些坑（也许是我不会用 😅）
+
+我们可以通过 `bpfModule.GetMap("xdp_stats_map_percpu")` 获取 BPF Maps 对象，此后便可以将其卸载到指定的 NIC 上，监听该网卡上接收到的数据包。接着使用 ` bpfMap.GetValue(unsafe.Pointer(&XDP_PASS))` 我们便可以获取 Map 对应 Key 所存储的数据。但我尝试从 `BPF_MAP_TYPE_PERCPU_ARRAY` 类型的 Map 中获取数据时却没有得到预期中的结果。我随即查阅了 `(*BPFMap) GetValue(unsafe.Pointer)` 函数的相关实现，
+
+```go
+// GetValue takes a pointer to the key which is stored in the map.
+// It returns the associated value as a slice of bytes.
+// All basic types, and structs are supported as keys.
+//
+// NOTE: Slices and arrays are also supported but special care
+// should be taken as to take a reference to the first element
+// in the slice or array instead of the slice/array itself, as to
+// avoid undefined behavior.
+func (b *BPFMap) GetValue(key unsafe.Pointer) ([]byte, error) {
+	value := make([]byte, b.ValueSize())
+	valuePtr := unsafe.Pointer(&value[0])
+
+	ret, errC := C.bpf_map_lookup_elem(b.fd, key, valuePtr)
+	if ret != 0 {
+		return nil, fmt.Errorf("failed to lookup value %v in map %s: %w", key, b.name, errC)
+	}
+	return value, nil
+}
+```
+
+可以看到其中 value 分配的内存空间只有 `b.ValueSize()` 也即单个 Value 数据结构的空间，但当我们使用 `BPF_MAP_TYPE_ PERCPU_ARRAY` Map 类型时，`bpf_map_lookup_elem` 返回的是所有 CPU 各自持有的 Map 对象中的数据，
+
+```c
+	struct datarec values[nr_cpus]; // sizeof(struct datarec) * nr_cpus
+	int i;
+
+	if ((bpf_map_lookup_elem(fd, &key, values)) != 0) {
+		fprintf(stderr,
+			"ERR: bpf_map_lookup_elem failed key:0x%X\n", key);
+		return;
+	}
+
+	for (i = 0; i < nr_cpus; i++) {
+		sum_pkts  += values[i].rx_packets;
+		sum_bytes += values[i].rx_bytes;
+	}
+```
+
+`bpf_map_*` 系列函数都是通过 `bpf()` 系统调用实现的，具体实现[参考此处](https://elixir.bootlin.com/linux/v5.4/source/tools/lib/bpf/bpf.c#L371)，也可以参考 `bpf` 系统调用手册。
+
+<center>    <img style="border-radius: 0.3125em;    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08); zoom:67%;"     src="https://cdn.jsdelivr.net/gh/wgblikeW/blog-imgs/bpf_basic03.png">    <br>    <div style="color:orange; border-bottom: 1px solid #d9d9d9;    display: inline-block;    color: #999;    padding: 2px;">示例代码运行输出</div> </center>
 
 #### TCP 协议报文结构
 
@@ -213,23 +273,23 @@ BPF maps 是通用的键值对存储方式，在上述定义中 `__uint(type, BP
 #### IP 协议报文结构
 
 ```bash
-            0                   1                   2                   3
-            0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |Version|  IHL  |Type of Service|          Total Length         |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |         Identification        |Flags|      Fragment Offset    |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |  Time to Live |    Protocol   |         Header Checksum       |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |                       Source Address                          |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |                    Destination Address                        |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-           |                    Options                    |    Padding    |
-           +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                    0                   1                   2                   3
+                    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |Version|  IHL  |Type of Service|          Total Length         |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |         Identification        |Flags|      Fragment Offset    |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |  Time to Live |    Protocol   |         Header Checksum       |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                       Source Address                          |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                    Destination Address                        |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+                   |                    Options                    |    Padding    |
+                   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                            Example Internet Datagram Header
+                                    Example Internet Datagram Header
 ```
 
 相关字段含义网络上已经有非常多详细的说明，在本文中便不再赘述。
@@ -240,3 +300,4 @@ BPF maps 是通用的键值对存储方式，在上述定义中 `__uint(type, BP
 2. [Cilium BPF reference guide](https://cilium.readthedocs.io/en/latest/bpf/) for building industrial application with BPF
 3. General Introduction to XDP in [the academic paper](https://github.com/xdp-project/xdp-paper/blob/master/xdp-the-express-data-path.pdf) or [the presentation](https://github.com/xdp-project/xdp-paper/blob/master/xdp-presentation.pdf).  
 4. [Linux 内核观测技术 BPF](https://item.jd.com/12939760.html)
+5. 极客时间课程，倪鹏飞老师的 eBPF 核心技术与实战
