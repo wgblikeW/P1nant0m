@@ -195,7 +195,7 @@ BPF maps 是通用的键值对存储方式，在上述定义中 `__uint(type, BP
 
 我在本课程中使用 Go 语言编写对应的用户态代码，主要使用到了 `github.com/aquasecurity/libbpfgo` [这个库](https://github.com/aquasecurity/libbpfgo)，其中遇到了一些坑（也许是我不会用 😅）
 
-我们可以通过 `bpfModule.GetMap("xdp_stats_map_percpu")` 获取 BPF Maps 对象，此后便可以将其卸载到指定的 NIC 上，监听该网卡上接收到的数据包。接着使用 ` bpfMap.GetValue(unsafe.Pointer(&XDP_PASS))` 我们便可以获取 Map 对应 Key 所存储的数据。但我尝试从 `BPF_MAP_TYPE_PERCPU_ARRAY` 类型的 Map 中获取数据时却没有得到预期中的结果。我随即查阅了 `(*BPFMap) GetValue(unsafe.Pointer)` 函数的相关实现，
+我们可以通过 `bpfModule.GetMap("xdp_stats_map_percpu")` 获取 BPF Maps 对象，此后便可以将其卸载到指定的 NIC 上，监听该网卡上接收到的数据包。接着使用 ` bpfMap.GetValu e(unsafe.Pointer(&XDP_PASS))` 我们便可以获取 Map 对应 Key 所存储的数据。但我尝试从 `BPF_MAP_TYPE_PERCPU_ARRAY` 类型的 Map 中获取数据时却没有得到预期中的结果。我随即查阅了 `(*BPFMap) GetValue(unsafe.Pointer)` 函数的相关实现，
 
 ```go
 // GetValue takes a pointer to the key which is stored in the map.
@@ -218,7 +218,7 @@ func (b *BPFMap) GetValue(key unsafe.Pointer) ([]byte, error) {
 }
 ```
 
-可以看到其中 value 分配的内存空间只有 `b.ValueSize()` 也即单个 Value 数据结构的空间，但当我们使用 `BPF_MAP_TYPE_ PERCPU_ARRAY` Map 类型时，`bpf_map_lookup_elem` 返回的是所有 CPU 各自持有的 Map 对象中的数据，
+可以看到其中 value 分配的内存空间只有 `b.ValueSize()` 也即单个 Value 数据结构的空间，但当我们使用 `BPF_MAP_TYPE_PERCPU_ARRAY` Map 类型时，`bpf_map_lookup_elem` 返回的是所有 CPU 各自持有的 Map 对象中的数据，
 
 ```c
 	struct datarec values[nr_cpus]; // sizeof(struct datarec) * nr_cpus
