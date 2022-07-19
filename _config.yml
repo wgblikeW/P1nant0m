@@ -64,8 +64,6 @@ kramdown:
 
 # gitTalk settings
 git_talk_comment: true
-client_id: ${{ secrets.CLIENT_ID }}
-client_secret: ${{ secrets.CLIENT_SECRET }}
 
 
 # Analytics settings
