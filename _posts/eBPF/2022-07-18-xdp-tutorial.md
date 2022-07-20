@@ -301,3 +301,10 @@ func (b *BPFMap) GetValue(key unsafe.Pointer) ([]byte, error) {
 3. General Introduction to XDP in [the academic paper](https://github.com/xdp-project/xdp-paper/blob/master/xdp-the-express-data-path.pdf) or [the presentation](https://github.com/xdp-project/xdp-paper/blob/master/xdp-presentation.pdf).  
 4. [Linux 内核观测技术 BPF](https://item.jd.com/12939760.html)
 5. 极客时间课程，倪鹏飞老师的 eBPF 核心技术与实战
+
+```
+(*BPFMap) GetValue return unexpected value when using BPF_MAP_TYPE_PERCPU_ARRAY
+
+Recently, I am learning BPF programming from taking the lecture in xdp-tutorial repo
+```
+
