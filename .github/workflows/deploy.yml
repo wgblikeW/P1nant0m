@@ -26,3 +26,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target_branch: 'gh-pages'
+          pre_build_commands: |
+            sed -i 's/CLIENT_ID/TEST/' _layouts/post.html
